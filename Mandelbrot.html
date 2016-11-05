@@ -1,0 +1,560 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Prof.&nbsp;Dr.&nbsp;Oliver Braun">
+  <title>Funktionale Programmierung — Blatt 1 —</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link href="data:text/css;charset=utf-8,%0A%2A%20%7B%20margin%3A%200%3B%20padding%3A%200%20%7D%0A%0Ahtml%20%7B%0Abackground%2Dcolor%3A%20white%3B%0Awidth%3A%20100%25%3B%0Aheight%3A%20100%25%3B%0A%7D%0Abody%20%7B%0Abackground%3A%20white%3B%0Acolor%3A%20black%3B%0Atext%2Dalign%3A%20left%3B%0Amargin%3A%2015px%20auto%20auto%2040px%3B%0Apadding%200%200%2040px%200%3B%0Amin%2Dheight%3A%20100%25%3B%0Aposition%3A%20relative%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E8em%200%3B%0A%7D%0Aul%2C%20ol%20%7B%0Amargin%3A%200%2E8em%200%200%2E8em%202em%3B%0A%7D%0Adl%20%7B%0Amargin%3A%200%2E8em%200%3B%0A%7D%0Adt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Add%20%7B%0Amargin%2Dleft%3A%202em%3B%0A%7D%0Aa%20%7B%20text%2Ddecoration%3A%20none%3B%20%7D%0Aa%5Bhref%5D%3Alink%20%7B%20color%3A%20rgb%28196%2C69%2C29%29%3B%20%7D%0Aa%5Bhref%5D%3Avisited%20%7B%20color%3A%20rgb%28171%2C105%2C84%29%3B%20%7D%0Aa%5Bhref%5D%3Ahover%20%7B%20text%2Ddecoration%3Aunderline%3B%20%7D%0A%0A%0A%0Abody%20%7B%0Afont%3A13px%2F1%2E4%20sans%2Dserif%3B%0A%2Afont%2Dsize%3Asmall%3B%20%0A%2Afont%3Ax%2Dsmall%3B%20%0A%7D%0Ah1%20%7B%20font%2Dsize%3A%20146%2E5%25%3B%20%20%7D%20h2%20%7B%20font%2Dsize%3A%20131%25%3B%20%20%7D%0Ah3%20%7B%20font%2Dsize%3A%20116%25%3B%20%20%7D%0Ah4%20%7B%20font%2Dsize%3A%20100%25%3B%20%20%7D%0Ah5%20%7B%20font%2Dsize%3A%20100%25%3B%20%20%7D%0Aselect%2C%20input%2C%20button%2C%20textarea%20%7B%0Afont%3A99%25%20sans%2Dserif%3B%0A%7D%0Atable%20%7B%0Afont%2Dsize%3Ainherit%3B%0Afont%3A100%25%3B%0A%7D%0Apre%2C%20code%2C%20kbd%2C%20samp%2C%20tt%2C%20%2Esrc%20%7B%0Afont%2Dfamily%3Amonospace%3B%0A%2Afont%2Dsize%3A108%25%3B%0Aline%2Dheight%3A%20124%25%3B%0A%7D%0A%2Elinks%2C%20%2Elink%20%7B%0Afont%2Dsize%3A%2085%25%3B%20%0A%7D%0A%23module%2Dheader%20%2Ecaption%20%7B%0Afont%2Dsize%3A%20182%25%3B%20%0A%7D%0A%2Einfo%20%7B%0Afont%2Dsize%3A%2085%25%3B%20%0A%7D%0A%23table%2Dof%2Dcontents%2C%20%23synopsis%20%7B%0A%0A%7D%0A%0A%0A%2Ecaption%2C%20h1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20h6%20%7B%20font%2Dweight%3A%20bold%3B%0Acolor%3A%20rgb%2878%2C98%2C114%29%3B%0Amargin%3A%200%2E8em%200%200%2E4em%3B%0A%7D%0A%2A%20%2B%20h1%2C%20%2A%20%2B%20h2%2C%20%2A%20%2B%20h3%2C%20%2A%20%2B%20h4%2C%20%2A%20%2B%20h5%2C%20%2A%20%2B%20h6%20%7B%0Amargin%2Dtop%3A%202em%3B%0A%7D%0Ah1%20%2B%20h2%2C%20h2%20%2B%20h3%2C%20h3%20%2B%20h4%2C%20h4%20%2B%20h5%2C%20h5%20%2B%20h6%20%7B%0Amargin%2Dtop%3A%20inherit%3B%0A%7D%0Aul%2Elinks%20%7B%0Alist%2Dstyle%3A%20none%3B%0Atext%2Dalign%3A%20left%3B%0Afloat%3A%20right%3B%0Adisplay%3A%20inline%2Dtable%3B%0Amargin%3A%200%200%200%201em%3B%0A%7D%0Aul%2Elinks%20li%20%7B%0Adisplay%3A%20inline%3B%0Aborder%2Dleft%3A%201px%20solid%20%23d5d5d5%3B%20white%2Dspace%3A%20nowrap%3B%0Apadding%3A%200%3B%0A%7D%0Aul%2Elinks%20li%20a%20%7B%0Apadding%3A%200%2E2em%200%2E5em%3B%0A%7D%0A%2Ehide%20%7B%20display%3A%20none%3B%20%7D%0A%2Eshow%20%7B%20display%3A%20inherit%3B%20%7D%0A%2Eclear%20%7B%20clear%3A%20both%3B%20%7D%0Apre%20%7B%0Apadding%3A%200%2E25em%3B%0Amargin%3A%200%2E8em%200%3B%0Abackground%3A%20rgb%28229%2C237%2C244%29%3B%0Aoverflow%3A%20auto%3B%0Aborder%2Dbottom%3A%200%2E25em%20solid%20white%3B%0A%0A%7D%0A%2Esrc%20%7B%0Abackground%3A%20%23f0f0f0%3B%0Apadding%3A%200%2E2em%200%2E5em%3B%0A%7D%0A%2Ekeyword%20%7B%20font%2Dweight%3A%20normal%3B%20%7D%0A%2Edef%20%7B%20font%2Dweight%3A%20bold%3B%20%7D%0A%0A%0A%23table%2Dof%2Dcontents%20%7B%0Afloat%3A%20right%3B%0Aclear%3A%20right%3B%0Abackground%3A%20%23faf9dc%3B%0Aborder%3A%201px%20solid%20%23d8d7ad%3B%0Apadding%3A%200%2E5em%201em%3B%0Amax%2Dwidth%3A%2020em%3B%0Amargin%3A%200%2E5em%200%201em%201em%3B%0A%7D%0A%23table%2Dof%2Dcontents%20%2Ecaption%20%7B%0Atext%2Dalign%3A%20center%3B%0Amargin%3A%200%3B%0A%7D%0A%23table%2Dof%2Dcontents%20ul%20%7B%0Alist%2Dstyle%3A%20none%3B%0Amargin%3A%200%3B%0A%7D%0A%23table%2Dof%2Dcontents%20ul%20ul%20%7B%0Amargin%2Dleft%3A%202em%3B%0A%7D%0A%23description%20%2Ecaption%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%23synopsis%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%2Eno%2Dframe%20%23synopsis%20%7B%0Adisplay%3A%20block%3B%0Aposition%3A%20fixed%3B%0Aright%3A%200%3B%0Aheight%3A%2080%25%3B%0Atop%3A%2010%25%3B%0Apadding%3A%200%3B%0A%7D%0A%23synopsis%20%2Ecaption%20%7B%0Afloat%3A%20left%3B%0Awidth%3A%2029px%3B%0Acolor%3A%20rgba%28255%2C255%2C255%2C0%29%3B%0Aheight%3A%20110px%3B%0Amargin%3A%200%3B%0Afont%2Dsize%3A%201px%3B%0Apadding%3A%200%3B%0A%7D%0A%23synopsis%20ul%20%7B%0Aheight%3A%20100%25%3B%0Aoverflow%3A%20auto%3B%0Apadding%3A%200%2E5em%3B%0Amargin%3A%200%3B%0A%7D%0A%23synopsis%20ul%20ul%20%7B%0Aoverflow%3A%20hidden%3B%0A%7D%0A%23synopsis%20ul%2C%0A%23synopsis%20ul%20li%2Esrc%20%7B%0Abackground%2Dcolor%3A%20%23faf9dc%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Alist%2Dstyle%3A%20none%3B%0Amargin%2Dleft%3A%200%3B%0A%7D%0A%0A%0A%23interface%20div%2Etop%20%7B%20margin%3A%202em%200%3B%20%7D%0A%23interface%20h1%20%2B%20div%2Etop%2C%0A%23interface%20h2%20%2B%20div%2Etop%2C%0A%23interface%20h3%20%2B%20div%2Etop%2C%0A%23interface%20h4%20%2B%20div%2Etop%2C%0A%23interface%20h5%20%2B%20div%2Etop%20%7B%0Amargin%2Dtop%3A%201em%3B%0A%7D%0A%23interface%20p%2Esrc%20%2Elink%20%7B%0Afloat%3A%20right%3B%0Acolor%3A%20%23919191%3B%0Aborder%2Dleft%3A%201px%20solid%20%23919191%3B%0Abackground%3A%20%23f0f0f0%3B%0Apadding%3A%200%200%2E5em%200%2E2em%3B%0Amargin%3A%200%20%2D0%2E5em%200%200%2E5em%3B%0A%7D%0A%23interface%20table%20%7B%20border%2Dspacing%3A%202px%3B%20%7D%0A%23interface%20td%20%7B%0Avertical%2Dalign%3A%20top%3B%0Apadding%2Dleft%3A%200%2E5em%3B%0A%7D%0A%23interface%20td%2Esrc%20%7B%0Awhite%2Dspace%3A%20nowrap%3B%0A%7D%0A%23interface%20td%2Edoc%20p%20%7B%0Amargin%3A%200%3B%0A%7D%0A%23interface%20td%2Edoc%20p%20%2B%20p%20%7B%0Amargin%2Dtop%3A%200%2E8em%3B%0A%7D%0A%2Esubs%20dl%20%7B%0Amargin%3A%200%3B%0A%7D%0A%2Esubs%20dt%20%7B%0Afloat%3A%20left%3B%0Aclear%3A%20left%3B%0Adisplay%3A%20block%3B%0Amargin%3A%201px%200%3B%0A%7D%0A%2Esubs%20dd%20%7B%0Afloat%3A%20right%3B%0Awidth%3A%2090%25%3B%0Adisplay%3A%20block%3B%0Apadding%2Dleft%3A%200%2E5em%3B%0Amargin%2Dbottom%3A%200%2E5em%3B%0A%7D%0A%2Esubs%20dd%2Eempty%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%2Esubs%20dd%20p%20%7B%0Amargin%3A%200%3B%0A%7D%0A%2Etop%20p%2Esrc%20%7B%0Aborder%2Dtop%3A%201px%20solid%20%23ccc%3B%0A%7D%0A%2Esubs%2C%20%2Edoc%20%7B%0A%0Apadding%2Dleft%3A%202em%3B%0A%7D%0A%2Earguments%20%7B%0Amargin%2Dtop%3A%20%2D0%2E4em%3B%0A%7D%0A%2Earguments%20%2Ecaption%20%7B%0Adisplay%3A%20none%3B%0A%7D%0A%2Efields%20%7B%20padding%2Dleft%3A%201em%3B%20%7D%0A%2Efields%20%2Ecaption%20%7B%20display%3A%20none%3B%20%7D%0A%2Efields%20p%20%7B%20margin%3A%200%200%3B%20%7D%0A%0A%0A%0A%23mini%20%7B%0Amargin%3A%200%20auto%3B%0Apadding%3A%200%201em%201em%3B%0A%7D%0A%23mini%20%3E%20%2A%20%7B%0Afont%2Dsize%3A%2093%25%3B%20%20%7D%0A%23mini%20%23module%2Dlist%20%2Ecaption%2C%0A%23mini%20%23module%2Dheader%20%2Ecaption%20%7B%0Afont%2Dsize%3A%20125%25%3B%20%0A%7D%0A%23mini%20%23interface%20h1%2C%0A%23mini%20%23interface%20h2%2C%0A%23mini%20%23interface%20h3%2C%0A%23mini%20%23interface%20h4%20%7B%0Afont%2Dsize%3A%20109%25%3B%20%0Amargin%3A%201em%200%200%3B%0A%7D%0A%23mini%20%23interface%20%2Etop%2C%0A%23mini%20%23interface%20%2Esrc%20%7B%0Amargin%3A%200%3B%0A%7D%0A%23mini%20%23module%2Dlist%20ul%20%7B%0Alist%2Dstyle%3A%20none%3B%0Amargin%3A%200%3B%0A%7D%0A%23alphabet%20ul%20%7B%0Alist%2Dstyle%3A%20none%3B%0Apadding%3A%200%3B%0Amargin%3A%200%2E5em%200%200%3B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23alphabet%20li%20%7B%0Adisplay%3A%20inline%3B%0Amargin%3A%200%200%2E25em%3B%0A%7D%0A%23alphabet%20a%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0A%23index%20%2Ecaption%2C%0A%23module%2Dlist%20%2Ecaption%20%7B%20font%2Dsize%3A%20131%25%3B%20%20%7D%0A%23index%20table%20%7B%0Amargin%2Dleft%3A%202em%3B%0A%7D%0A%23index%20%2Esrc%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0A%23index%20%2Ealt%20%7B%0Afont%2Dsize%3A%2077%25%3B%20%0Afont%2Dstyle%3A%20italic%3B%0Apadding%2Dleft%3A%202em%3B%0A%7D%0A%23index%20td%20%2B%20td%20%7B%0Apadding%2Dleft%3A%201em%3B%0A%7D%0A%23module%2Dlist%20ul%20%7B%0Alist%2Dstyle%3A%20none%3B%0Amargin%3A%200%200%200%202em%3B%0A%7D%0A%23module%2Dlist%20li%20%7B%0Aclear%3A%20right%3B%0A%7D%0A%23module%2Dlist%20span%2Ecollapser%2C%0A%23module%2Dlist%20span%2Eexpander%20%7B%0Abackground%2Dposition%3A%200%200%2E3em%3B%0A%7D%0A%23module%2Dlist%20%2Epackage%20%7B%0Afloat%3A%20right%3B%0A%7D%0A%0A" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="header">
+<h1 class="title">Funktionale Programmierung<br>
+— Blatt 1 —</h1>
+<h2 class="author">Prof.&nbsp;Dr.&nbsp;Oliver Braun</h2>
+<h3 class="date">Sommersemester 2015</h3>
+</div>
+<blockquote>
+<p>Dieses Blatt ist ein Tutorial an dem Sie sich selbst entlang hangeln sollen. Wenden Sie sich bei Problemen/Fragen bitte an mich.</p>
+</blockquote>
+<p>Wir programmieren in <a href="http://haskell.org/">Haskell</a> und nutzen <a href="http://www.haskell.org/platform/">Haskell Platform</a> auf Ihrem eigenen Rechner. Sie müssen nur <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a>
+ per Hand installieren. Über Stack installieren Sie dann den Glasgow 
+Haskell Compiler und den dazugehörigen Interpreter und können mit einem 
+beliebigen Editor Haskell-Dateien bearbeiten. Es gibt noch einige mehr 
+oder weniger ausgereifte <a href="http://www.haskell.org/haskellwiki/IDE">IDEs</a>. Die meisten Haskeller nutzen Texteditoren, wie vim oder Emacs mit Haskell-Plugins.</p>
+<h1 id="aufgabe-1-erste-schritte-mit-haskell">Aufgabe 1 — Erste Schritte mit Haskell</h1>
+<p>Der GHC bringt einen sog. REPL (<strong>R</strong>ead <strong>E</strong>valuate <strong>P</strong>rint <strong>L</strong>oop) mit dem Namen GHCi mit. Sie starten ihn auf der Kommandozeile mit dem Befehl <code>stack repl</code> hinter dem Prompt (hier als <code>$</code> dargestellt):</p>
+<pre><code>$ stack repl
+...
+Prelude&gt;</code></pre>
+<p>Hinter dem <code>Prelude&gt;</code>-Prompt können Sie einen 
+Haskell-Ausdruck eingeben und diesen unmittelbar evaluieren lassen. 
+Probieren Sie mindestens die folgenden Ausdrücke aus:</p>
+<pre><code>2 + 3
+sqrt 15
+print 12
+show 12</code></pre>
+<p>Der GHCi hat weiterhin Kommandos mit denen Sie z.B. zusätzliche 
+Informationen erhalten können. Probieren Sie mindestens folgendes aus:</p>
+<pre><code>:h
+:t "Hallo"
+:i String
+:browse Data.Char</code></pre>
+<h1 id="aufgabe-2-ein-erstes-programm">Aufgabe 2 — Ein erstes Programm</h1>
+<p>Ein Haskell-Programm besteht aus Modulen. Ein Modul entspricht dabei 
+einer Datei. Wir beginnen mit einem ganz einfachen Programm mit dem wir 
+das Quadrat einer ganzen Zahl berechnen können.</p>
+<p>Öffnen Sie dazu eine Datei <code>Foo.hs</code> mit einem beliebigen Texteditor. Definieren Sie eine Funktion mit dem Namen <code>square</code> die das Quadrat einer ganzen Zahl berechnet. Schreiben Sie dazu als einzige Zeile</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">square n <span class="fu">=</span> n<span class="fu">^</span><span class="dv">2</span></code></pre></div>
+<p>in das Haskell-Modul.</p>
+<p>Um die Funktion auszuprobieren, können Sie Ihr Modul in den GHCi laden:</p>
+<pre><code>$ stack repl
+...
+Prelude&gt; :l Foo</code></pre>
+<p>Der Prompt wechselt damit zu <code>Main&gt;</code>, da Sie nun das Modul <code>Main</code> geladen haben, auch wenn wir dem Modul in der Datei <code>Foo.hs</code> keinen expliziten Namen gegeben haben.</p>
+<p>Wenn Sie in Ihrem Modul etwas ändern und die Datei abspeichern, können Sie sie mit <code>:r</code> im GHCi reloaden.</p>
+<p>Berechnen Sie nun ein paar Quadrate.</p>
+<p>Lassen Sie sich mit <code>:t square</code> den Typ anzeigen:</p>
+<pre><code>*Foo&gt; :t square
+square :: Num a =&gt; a -&gt; a</code></pre>
+<p>Das bedeutet, dass Sie <code>square</code> auf jeden Typ <code>a</code> anwenden können, der in der Typklasse <code>Num</code> ist. Sehen Sie sich an, wer alles in der Typklasse <code>Num</code> ist und welche Funktione in der Klasse definiert sind, durch</p>
+<pre><code>:i Num</code></pre>
+<p>D.h. Sie haben durch die einfache Definition oben gleich eine 
+polymorphe Funktion definiert, die Sie auf verschiedene Typen anwenden 
+können. Und <strong>Achtung</strong>: Es gibt in Haskell kein implizites Umwandeln (<em>casten</em>) eines Wertes in einen anderen (wie z.B. <code>int</code> -&gt; <code>double</code> in Java).</p>
+<p>Das geht noch weiter. Sehen Sie sich doch mal den Typ der Zahl <code>1</code> an:</p>
+<pre><code>*Foo&gt; :t 1
+1 :: Num a =&gt; a</code></pre>
+<p>D.h. auch die 1 ist polymorph. Nochmal: Es wird nichts umgewandelt, sondern die <code>1</code> ist als Literal <strong>überladen</strong>. Je nach Kontext steht das Literal <code>1</code> dann aber für einen konkreten Typ.</p>
+<p>Betrachten wir als nächstes beispielsweise die vordefinierte Funktion <code>sqrt</code>.
+ Lassen Sie sich den Typ anzeigen. Sie sehen wieder eine polymorphe 
+Funktion, aber diesesmal mit einer anderen Typklasse. Sehen Sie sich 
+auch dieses Mal an, was die Typklasse enthält und welche Typen dazu 
+gehören.</p>
+<p>Es gehört zum guten Stil— auch wenn Haskell die Typen im Normalfall 
+selbst berechnen kann —für alle Top-Level-Definitionen, wie in unserem 
+Fall <code>square</code>, den Typ anzugeben.</p>
+<p>D.h. wir ergänzen unser Modul <code>Foo</code>, so dass es folgendermaßen aussieht:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">square ::</span> <span class="dt">Num</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> a
+square n <span class="fu">=</span> n<span class="fu">^</span><span class="dv">2</span></code></pre></div>
+<p>Damit ändert sich gar nichts, wir haben nur unseren Code <em>lesbarer</em> gemacht. Wir können aber so eine explizite Typangabe auch nutzen um eine Funktion auf eine Menge von Typen einzuschränken.</p>
+<p>Ersetzen Sie die <strong>Typsignatur</strong> zunächst durch:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">square ::</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span></code></pre></div>
+<p>und dann durch</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">square ::</span> <span class="dt">Fractional</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> a</code></pre></div>
+<p>und probieren Sie die Funktion im GHCi aus. Wenn Sie im zweiten Fall (<code>Fractional</code>) z.B. <code>square 1</code> eingeben, bekommen Sie als Ergebnis <code>1.0</code>, ein Literal das für einen <code>Float</code> oder einen <code>Double</code> stehen kann.</p>
+<p>Um unser Miniprogramm außerhalb des GHCi nutzen zu können, benötigen wir, wie in anderen Sprachen, eine <code>main</code>-Funktion. Ergänzen Sie Ihr Modul <code>Foo</code> um folgende <code>main</code>-Funktion:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  hSetBuffering stdout <span class="dt">NoBuffering</span>
+  putStr <span class="st">"Geben Sie bitte eine Zahl ein (0 == Ende): "</span>
+  number <span class="ot">&lt;-</span> readLn
+  putStrLn (<span class="st">"square("</span> <span class="fu">++</span> show number <span class="fu">++</span> <span class="st">") = "</span> <span class="fu">++</span> show (square number))
+  <span class="kw">if</span> number <span class="fu">==</span> <span class="dv">0</span>
+    <span class="kw">then</span> putStrLn <span class="st">"Ciao"</span>
+    <span class="kw">else</span> main</code></pre></div>
+<p>Fügen Sie außerdem <strong>vor</strong> allen Funktionsdefinitionen folgendes Import-Statement hinzu:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">System.IO</span> (hSetBuffering, <span class="dt">BufferMode</span>(<span class="dt">NoBuffering</span>), stdout)</code></pre></div>
+<p>Diese Buffering-Sachen benötigen wir nur, da das Betriebssystem 
+normalerweise die Ausgaben puffert und erst mit einem Newline wirklich 
+aus gibt. Sie können die Zeile in der <code>main</code>-Funktion ja mal 
+auskommentieren und ausprobieren was dann passiert. Um diese speziellen 
+Funktionen zu nutzen, müssen wir Sie erst importieren.</p>
+<p>Sie können dieses Programm jetzt auf verschiedene Arten ausführen:</p>
+<p>Im GHCi:</p>
+<pre><code>*Main&gt; main</code></pre>
+<p>oder</p>
+<pre><code>*Main&gt; :main</code></pre>
+<p>Mit der zweiten Version könnten Sie dahinter im GHCi Kommandozeilenargumente angeben.</p>
+<p>Oder als Script direkt auf der Kommandozeile:</p>
+<pre><code>$ stack runhaskell Foo</code></pre>
+<p>oder</p>
+<pre><code>$ stack runhaskell Foo.hs</code></pre>
+<p>Oder Sie compilieren es und führen es dann aus:</p>
+<pre><code>$ stack ghc Foo</code></pre>
+<p>oder</p>
+<pre><code>$ stack ghc Foo.hs</code></pre>
+<p>und dann</p>
+<pre><code>$ ./Foo</code></pre>
+<p>Probieren Sie das Programm aus.</p>
+<p>Ändern Sie die Typsignatur von <code>square</code> wieder zu</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">square ::</span> <span class="dt">Num</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> a</code></pre></div>
+<p>Funktioniert es immer noch für <code>Int</code>, <code>Integer</code>, <code>Float</code> und <code>Double</code>?</p>
+<p>Es scheint nur noch mit ganzen Zahlen zu gehen:</p>
+<pre><code>Geben Sie bitte eine Zahl ein (0 == Ende): 12
+square(12) = 144
+Geben Sie bitte eine Zahl ein (0 == Ende): 1.2
+Foo.hs: user error (Prelude.readIO: no parse)</code></pre>
+<p>Aber woran kann das liegen? <code>square</code> kann es nicht sein. Sehen Sie sich mal im GHCi an was <code>show</code> und <code>readLn</code> für Typen haben:</p>
+<pre><code>Prelude&gt; :t show
+show :: Show a =&gt; a -&gt; String
+Prelude&gt; :t readLn
+readLn :: Read a =&gt; IO a</code></pre>
+<p><code>show</code> nimmt einen Wert von einem beliebigen Typ <code>a</code> der in der Typklasse <code>Show</code> ist. Damit ist <code>show</code> so etwas wie <code>toString()</code> in Java. Sollte also kein Problem machen.</p>
+<p><code>readLn</code> ist da schon etwas spezieller. Die Funktion macht I/O und gibt danach einen Wert von einem beliebigen Typ der in der Typklasse <code>Read</code> ist zurück. Erstmal doch nichts Ungewöhnliches. Oder etwa doch?</p>
+<p>Die Funktion <code>readLn</code> könnte es in Java gar nicht geben, 
+denn es ist eine polymorphe Funktion deren Instanzen sich nur durch den 
+Rückgabetyp unterscheiden. Und das ist in Java schlichtweg nicht 
+erlaubt, weil die Laufzeitumgebung nicht die richtige Funktion auswählen
+ kann.</p>
+<p>Aber wie macht Haskell das? Haskell sieht an späterer Stelle wird auf das Ergebnis von <code>readLn</code>, nämlich <code>number</code>, die Funktion <code>square</code> angewendet. Dazu muss eine <code>readLn</code>-Funktion gebunden werden, die eine Zahl (<code>Num a =&gt; a</code>)
+ zurück gibt. Aber das ist für ein konkretes Programm immer noch zu 
+polymorph. Haskell muss eine konkrete Funktion auswählen. Und wenn es 
+nur von einer Zahl weiß, nimmt es die Instanz für <code>Integer</code>. Also läuft unser Programm nur für ganze Zahlen.</p>
+<p>Was aber wenn wir einen <code>Double</code> eingeben wollen?</p>
+<p>Das bekommen wir hin in dem wir dem Haskell-Compiler durch eine <em>Typ-Annotation</em> einen Tipp geben, was wir haben wollen. Wir schreiben hinter die Zeile mit dem <code>readLn</code> einfach den konkreten Typ von <code>readLn</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">    number <span class="ot">&lt;- readLn ::</span> <span class="dt">IO</span> <span class="dt">Double</span></code></pre></div>
+<p>Jetzt funktioniert es für <code>Double</code>. Wir können aber immer noch einfach nur eine <code>1</code> eingeben. In dem Fall hat die <code>1</code> aber den Typ <code>Double</code> :-)</p>
+<h1 id="aufgabe-3-ein-erstes-projekt">Aufgabe 3 — Ein erstes Projekt</h1>
+<p>Wir wollen jetzt gleich im nächsten Schritt ein richtiges 
+Haskell-Projekt mit allem Drum und Dran erstellen. Da können wir dann 
+Übersetzen, Ausführen, Doku generieren, Tests ausführen, usw.</p>
+<p>Für Haskell gibt es ein spezielles Build-Tool <a href="https://www.haskell.org/cabal/">Cabal</a>, so wie <code>make</code> für Unix, <code>sbt</code> für Scala, <code>maven</code>
+ für Java, … Über Stack wird Cabal gleich mit eingebunden. Gesteuert 
+wird ein Haskell-Projekt dann durch eine Datei die die Endung <code>.cabal</code> trägt.</p>
+<p>Wir wollen unser Projekt <code>Blatt01</code> nennen. Mit dem Kommando</p>
+<pre><code>stack new Blatt01</code></pre>
+<p>können wir ein neues Haskell-Projekt aus einem Template im 
+Verzeichnis Blatt01 erzeugen. Der Inhalt des Verzeichnisses ist 
+anschließend:</p>
+<pre><code>Blatt01/
+├── Blatt01.cabal
+├── LICENSE
+├── Setup.hs
+├── app
+│&nbsp;&nbsp; └── Main.hs
+├── src
+│&nbsp;&nbsp; └── Lib.hs
+├── stack.yaml
+└── test
+    └── Spec.hs</code></pre>
+<p>Sehen Sie sich die verschiedenen Dateien an. Das Projekt ist so aufgebaut, dass es eine Applikation im Verzeichnis <code>app</code> gibt und diese eine Library im Verzeichnis <code>src</code> nutzt. Außerdem ist schon ein Verzeichnis <code>test</code> für die Tests angelegt.</p>
+<p>Die Datei <code>Blatt01.cabal</code> enthält die Konfiguration des 
+Projektes. Darin können Sie Ihren Namen etc. anpassen und im Anschluß 
+auch weitere Anpassungen des Projektes hinzufügen. Die Datei <code>Setup.hs</code> wird von Cabal genutzt. Lassen Sie diese bitte unverändert.</p>
+<p>In der Datei <code>stack.yaml</code> können Sie Stack konfigurieren.</p>
+<p>Wir können das Projekt nun schon bauen lassen, obwohl wir noch gar kein Stück eigenen Programmcode geschrieben haben.</p>
+<pre><code>$ stack build</code></pre>
+<p>Um die Applikation dann auszuführen, geben wir den in <code>Blatt01.cabal</code> spezifzierten Namen an:</p>
+<pre><code>$ stack exec Blatt01-exe</code></pre>
+<p>Um die Tests auszuführen, geben wir folgendes ein:</p>
+<pre><code>$ stack test</code></pre>
+<p>Nun wollen wir unser Projekt aber etwas mit Leben füllen. Dazu erweitern wir die Datei <code>Lib.hs</code> im Verzeichnis <code>src</code> um die <code>square</code>-Funktion
+ von oben. Diese Funktion wollen wir von außen nutzbar machen, dazu 
+müssen wir sie zur Exportliste hinzufügen. Die Funktion <code>someFunc</code> entfernen wir.</p>
+<div class="sourceCode"><table class="sourceCode haskell numberLines"><tbody><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td><td class="sourceCode"><pre><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Lib</span>
+    ( square
+    ) <span class="kw">where</span>
+
+<span class="ot">square ::</span> <span class="dt">Num</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> a
+square n <span class="fu">=</span> n<span class="fu">^</span><span class="dv">2</span></code></pre></td></tr></tbody></table></div>
+<p>Wir wollen jetzt aber wieder ein ausführbares Programm erzeugen. Dazu ersetzen wir dir vorhandene <code>Main.hs</code> durch folgendem Inhalt:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="kw">import           </span><span class="dt">Lib</span>       (square)
+<span class="kw">import           </span><span class="dt">System.IO</span> (<span class="dt">BufferMode</span> (<span class="dt">NoBuffering</span>), hSetBuffering, stdout)
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+  hSetBuffering stdout <span class="dt">NoBuffering</span>
+  putStr <span class="st">"Geben Sie bitte eine Zahl ein (0 == Ende): "</span>
+  number <span class="ot">&lt;- readLn ::</span> <span class="dt">IO</span> <span class="dt">Double</span>
+  putStrLn (<span class="st">"square("</span> <span class="fu">++</span> show number <span class="fu">++</span> <span class="st">") = "</span> <span class="fu">++</span> show (square number))
+  <span class="kw">if</span> number <span class="fu">==</span> <span class="dv">0</span>
+    <span class="kw">then</span> putStrLn <span class="st">"Ciao"</span>
+    <span class="kw">else</span> main</code></pre></div>
+<p>Jetzt können wir mit Stack bauen und ausführen.</p>
+<pre><code>$ stack build
+$ stack exec Blatt01-exe</code></pre>
+<p>Mit einem</p>
+<pre><code>$ stack repl</code></pre>
+<p>wird jetzt automatisch das gesamte Projekt in den GHCi geladen. D.h. wir können dort direkt auf <code>square</code> zugreifen.</p>
+<h1 id="aufgabe-4-dokumentieren-und-testen">Aufgabe 4 — Dokumentieren und Testen</h1>
+<p>Zur Software-Qualität gehört dokumentierter und getesteter Code.</p>
+<p>Als Allererster wollen wir aber unser Package in der <code>Blatt01.cabal</code>-Datei mit Zusatzinformationen versehen. Dazu fügen wir in dem oberen Teil (unter <code>name:</code>…) folgendes hinzu:</p>
+<pre><code>copyright:      2015 Oliver Braun
+license:        BSD3
+synopsis:       An example package.
+description:    Package for the fp lecture at hm.edu
+category:       Misc
+maintainer:     ob@cs.hm.edu</code></pre>
+<h2 id="haddock">Haddock</h2>
+<p>Was für Java JavaDoc ist, ist für Haskell <a href="https://www.haskell.org/haddock/">Haddock</a>. Damit nehmen wir uns als erstes das Modul <code>Lib</code> vor. Wir dokumentieren es z.B. so</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- | A Lib module.</span>
+<span class="kw">module</span> <span class="dt">Lib</span> (square) <span class="kw">where</span>
+
+<span class="co">-- | Calculate the square of a number</span>
+<span class="ot">square ::</span> <span class="dt">Num</span> a
+       <span class="ot">=&gt;</span> a <span class="co">-- ^ the number</span>
+       <span class="ot">-&gt;</span> a <span class="co">-- ^ the square</span>
+square n <span class="fu">=</span> n<span class="fu">^</span><span class="dv">2</span></code></pre></div>
+<p>Mit dem Kommando</p>
+<pre><code>$ stack haddock</code></pre>
+<p>können wir nun eine API-Dokumentation in HTML erzeugen. Anschließend können wir die Dokumentation unterhalb von <code>.stack-work/dist/</code> finden und im Browser öffnen. Bei der Ausgabe von <code>stack haddock</code> wird auch angezeigt wie hoch die Abdeckung der Dokumentation ist.</p>
+<h2 id="testen">Testen</h2>
+<p>Haskell Code wird üblicherweise mit HUnit und/oder QuickCheck getestet. <a href="http://hspec.github.io/">HSpec</a> ist ein Testing-Framework mit einer angenehmen Syntax das beide Ansätze enthält.</p>
+<p>Als erstes ersetzen wir im Verzeichnis <code>test</code> den Inhalt der Datei <code>Spec.hs</code> durch die einzige Zeile</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">{-# OPTIONS_GHC -F -pgmF hspec-discover #-}</span></code></pre></div>
+<p>als Inhalt. Dies weißt den GHC an im aktuellen Verzeichnis nach Dateien die mit <code>Spec.hs</code> enden und als Modul eine Funktion <code>spec :: Spec</code> exportieren.</p>
+<p>Um die Tests mit <code>stack</code> ausführen zu können, erweitern wir die <code>build-depends</code> im Abschnitt <code>test-suite</code> um die Packages <code>hspec</code> und <code>QuickCheck</code>:</p>
+<pre><code>test-suite Blatt01-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , Blatt01
+                     , hspec
+                     , QuickCheck
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010</code></pre>
+<p>Nachdem es nun durch <code>hspec</code> einige Packages gibt, die vorher noch nicht in unserem Projekt enthalten waren, wird bei</p>
+<pre><code>$ stack test</code></pre>
+<p>nun einiges neu installiert. Das macht Stack alles automatisch.</p>
+<p>Jetzt wollen wir aber natürlich auch was testen. Wir schreiben eine 
+Spezifikation für unser Lib-Modul. Dazu schreiben wir in die Datei <code>LibSpec.hs</code> im Verzeichnis <code>test</code>:</p>
+<div class="sourceCode"><table class="sourceCode haskell numberLines"><tbody><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="sourceCode"><pre><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE ScopedTypeVariables #-}</span>
+<span class="kw">module</span> <span class="dt">LibSpec</span> (spec) <span class="kw">where</span>
+
+<span class="kw">import           </span><span class="dt">Lib</span>             (square)
+<span class="kw">import           </span><span class="dt">Test.Hspec</span>
+<span class="kw">import           </span><span class="dt">Test.QuickCheck</span>
+
+<span class="ot">spec ::</span> <span class="dt">Spec</span>
+spec <span class="fu">=</span>
+    describe <span class="st">"square"</span> <span class="fu">$</span> <span class="kw">do</span>
+        it <span class="st">"calculates the square of 5.3"</span> <span class="fu">$</span>
+            square <span class="fl">5.3</span> <span class="ot">`shouldBe`</span> <span class="fl">28.09</span>
+        it <span class="st">"calculates the square of an arbitrary integer"</span> <span class="fu">$</span>
+            property <span class="fu">$</span> \(<span class="ot">n ::</span> <span class="dt">Integer</span>)  <span class="ot">-&gt;</span> square n <span class="fu">==</span> n <span class="fu">*</span> n
+        it <span class="st">"calculates the square of an arbitrary double"</span> <span class="fu">$</span>
+            property <span class="fu">$</span> \(<span class="ot">n ::</span> <span class="dt">Double</span>)  <span class="ot">-&gt;</span> square n <span class="fu">==</span> n <span class="fu">*</span> n</code></pre></td></tr></tbody></table></div>
+<p>Die <code>spec</code>-Funktion ist eine Spezifikation. Als solche soll sie möglichst gut, auch für Nicht-Programmierer, lesbar sein.</p>
+<p>Der erste Test in den Zeilen 11-12 ist ein HUnit-Test. Ein Ausdruck <code>square 5.3</code> wird berechnet und soll zum Ergebnis <code>28.09</code> kommen.</p>
+<p>Der zweite Test in den Zeilen 13-14 ist etwas ungewöhnlicher. Er spezifiziert eine Eigenschaft (<em>property</em>), nämlich, dass für alle ganzen Zahlen <code>n</code> gilt: <code>square n</code> ist gleich <code>n * n</code>. Wir müssen <code>n</code> für den Test auf einen konkreten Typ einschränken, in dem Fall <code>Integer</code>. Damit wird das elegant in dem Lambda-Ausdruck machen können, nutzen wir eine Erweiterung des GHC mit dem Namen <code>ScopedTypeVariables</code>, die wir über das Language-Pragma in Zeile 1 aktivieren.</p>
+<p>Wie kann jetzt aber das Property getestet werden? Die dazu notwendige
+ QuickCheck-Bibliothek erzeugt Zufallswerte, standardmäßig 100 Stück, 
+und füttert die Funktion damit. Für jeden Wert wird dann überprüft ob 
+die Gleichheit gilt.</p>
+<p>In den Zeilen 15-16 wird das Gleiche für <code>Double</code>s überprüft.</p>
+<p>Um die Tests nun auszuführen, müssen Sie dem GHC die Chance geben, 
+die neue Datei zu finden. Am Einfachsten gelingt das, wenn Sie das 
+Projekt erst “cleanen” und dann neu bauen:</p>
+<pre><code>$ stack clean
+$ stack test</code></pre>
+<h2 id="benchmarks">Benchmarks</h2>
+<p>Haskell bietet mit der Criterion-Bibliothek eine schöne Möglichkeit 
+Benchmarks durchzuführen an. Wir erweitern unser Projekt dazu wie folgt.
+ Zunächst erzeugen wir ein Unterverzeichnis <code>benchmark</code> und darin eine Datei <code>Bench.hs</code> mit folgendem Inhalt:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span>
+
+<span class="kw">import           </span><span class="dt">Criterion.Main</span> (bench, bgroup, defaultMain, nf)
+<span class="kw">import           </span><span class="dt">Lib</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> defaultMain
+    [ bgroup <span class="st">"Lib"</span> [ bench <span class="st">"1"</span>     <span class="fu">$</span> nf square (<span class="dv">1</span><span class="ot">     ::</span> <span class="dt">Int</span>)
+                   , bench <span class="st">"200"</span>   <span class="fu">$</span> nf square (<span class="dv">200</span><span class="ot">   ::</span> <span class="dt">Integer</span>)
+                   , bench <span class="st">"200.0"</span> <span class="fu">$</span> nf square (<span class="fl">200.0</span><span class="ot"> ::</span> <span class="dt">Double</span>)
+                   , bench <span class="st">"20.8"</span>  <span class="fu">$</span> nf square (<span class="fl">20.8</span><span class="ot">  ::</span> <span class="dt">Float</span>)
+                   ]
+    ]</code></pre></div>
+<p>Damit werden 4 Benchmarks in einer Gruppe mit dem Namen <code>Lib</code> ausgeführt. Jeder Benchmark (<code>bench</code>)
+ hat einen Titel und einen Ausdruck den er auswertet. Nachdem Haskell 
+lazy ist, muss die Auswertung in die Normalform mit der Funktion <code>nf</code> erzwungen werden. Da die Funktion <code>square</code> polymorph ist müssen wir jeweils angeben, welchen Typ der Parameter und damit die Funktion hat.</p>
+<p>Um die Benchmarks von Cabal ausführen zu lassen, fügen wir folgenden Teil an die Datei <code>Blatt01.cabal</code> an:</p>
+<pre><code>benchmark criterion
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      benchmark
+  main-is:             Bench.hs
+  build-depends:       base
+                     , Blatt01
+                     , criterion
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010</code></pre>
+<p>Anschließend können wir die Benchmarks mit dem Kommando</p>
+<pre><code>$ stack bench</code></pre>
+<p>ausführen.</p>
+<p>Dies gibt uns Informationen über die Zeit, Mittelwert und Standardabweichung auf der Kommandozeile.</p>
+<p>Wir können aber auch einen HTML-Report mit Graphen generieren lassen durch:</p>
+<pre><code>$ stack bench --benchmark-arguments="-o report.html"</code></pre>
+<p>Anschließend können wir die Datei <code>report.html</code> im Browser betrachten.</p>
+<h2 id="code-qualität">Code-Qualität</h2>
+<p>Haskell bietet eine Menge an Möglichkeiten die Code-Qualität zu überprüfen.</p>
+<h3 id="dokumentationstests">Dokumentationstests</h3>
+<p>Besonders frustrierend ist es wenn die Beispiele die in der API-Dokumentation stehen nicht funktionieren. Haskell bietet mit <a href="http://hackage.haskell.org/package/doctest">doctest</a> eine Möglichkeit diesen Code zu überprüfen.</p>
+<p>Dazu erzeugen wir eine Datei <code>test/DocTest.hs</code> mit folgendem Inhalt:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span>
+
+<span class="kw">import           </span><span class="dt">System.FilePath.Glob</span> (glob)
+<span class="kw">import           </span><span class="dt">Test.DocTest</span>         (doctest)
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> glob <span class="st">"src/**/*.hs"</span> <span class="fu">&gt;&gt;=</span> doctest</code></pre></div>
+<p>und fügen zu <code>Blatt01.cabal</code> hinzu:</p>
+<pre><code>test-suite doctest
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             DocTest.hs
+  build-depends:       base
+                     , doctest
+                     , Glob
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010</code></pre>
+<p>Damit der Doc-Test überhaupt etwas zu tun hat, fügen wir der Dokumentation von <code>square</code> die Berechnung von <code>square 5.0</code> hinzu und geben als Ergebnis <code>25.0</code> an:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">{- | Calculate the square of a number</span>
+
+<span class="co">&gt;&gt;&gt; square 5.0</span>
+<span class="co">25.0</span>
+<span class="co">-}</span>
+<span class="ot">square ::</span> <span class="dt">Num</span> a
+       <span class="ot">=&gt;</span> a <span class="co">-- ^ the number</span>
+       <span class="ot">-&gt;</span> a <span class="co">-- ^ the square</span></code></pre></div>
+<p>Wenn Sie anschließend</p>
+<pre><code>$ stack test</code></pre>
+<p>ausführen, wird neben dem hspec-Test auch der Doc-Test ausgeführt. 
+Probieren Sie es anschließend mal mit einem falschen Ergebnis im 
+Haddock-Kommentar.</p>
+<!--
+### Documentation Coverage
+
+Nachdem Haddock bereits angibt zu wieviel Prozent in jedem Modul dokumentiert
+ist, können wir dieses einfach durch ein Haskell-Programm auswerten lassen und
+überprüfen ob der Anteil ausreichend ist. Im folgenden Code der Datei
+`test/Haddock.hs` wird 90% verlangt:
+
+~~~~ {.haskell}
+module Main (main) where
+
+import           Data.List      (genericLength)
+import           Data.Maybe     (catMaybes)
+import           System.Exit    (exitFailure, exitSuccess)
+import           System.Process (readProcess)
+import           Text.Regex     (matchRegex, mkRegex)
+
+average :: (Fractional a, Real b) => [b] -> a
+average xs = realToFrac (sum xs) / genericLength xs
+
+expected :: Fractional a => a
+expected = 90
+
+main :: IO ()
+main = do
+    output <- readProcess "cabal" ["haddock"] ""
+    if average (match output) >= expected
+        then exitSuccess
+        else putStr output >> exitFailure
+
+match :: String -> [Int]
+match = fmap read . concat . catMaybes . fmap (matchRegex pattern) . lines
+  where pattern = mkRegex "^ *([0-9]*)% "
+~~~~
+
+Zu `Blatt01.cabal` fügen Sie folgendes hinzu:
+
+    test-suite haddock
+      type:                exitcode-stdio-1.0
+      hs-source-dirs:      test
+      main-is:             Haddock.hs
+      build-depends:       base
+                         , process
+                         , regex-compat
+      ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+      default-language:    Haskell2010
+
+Anschließend wieder
+
+    $ cabal install --enable-tests
+    $ cabal test
+
+-->
+<!--
+### Test Coverage
+
+Für Haskell gibt es mit
+[HPC](http://www.haskell.org/haskellwiki/Haskell_program_coverage) ein Tool mit
+dem die Test Coverage gemessen werden kann. Um es nutzen zu können, müssen wir
+zunächst unsere Hspec-Testsuite in der `Blatt01.cabal` anpassen:
+
+test-suite Blatt01-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , Blatt01
+                     , hspec
+                     , QuickCheck
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -fhpc
+  default-language:    Haskell2010
+
+Mit `-fhpc` sagen wir dem GHC, dass er HPC nutzen soll. Wir müssen Cabal leider
+explizit sagen, welche Module HPC außer `Spec` noch untersuchen soll.
+
+HPC und Cabal spielen leider im Moment nicht sehr gut zusammen. Daher
+führen wir zunächst die Tests aus
+
+    $ cabal configure --enable-tests
+    $ cabal build
+    $ cabal test
+
+und generieren daraus im Anschluß den HPC-Report.
+
+Zunächst müssen Sie die Datei `hspec.tix` finden. Unter Mac OS liegt diese
+beispielsweise direkt im Projektverzeichnis, unter FreeBSD unter
+`dist/hpc/tix/hspec/`.
+
+Unter Mac OS erzeuge ich dann mit
+
+    hpc markup --destdir=dist/hpc hspec
+
+unter FreeBSD mit
+
+    hpc markup --destdir=dist/hpc dist/hpc/tix/hspec/hspec
+
+den Coverage Report im Verzeichnis `dist/hpc`.
+-->
+<h3 id="hlint">HLint</h3>
+<p><a href="https://github.com/ndmitchell/hlint">HLint</a> inspiziert Haskell Code und gibt Verbesserungsempfehlungen. HLint gibt es als Kommandozeilentool das Sie durch</p>
+<pre><code>cabal install hlint</code></pre>
+<p>unter <code>.cabal</code> installieren können. HLint lässt sich aber als Haskell-Funktion nutzen. Dazu erstellen Sie eine Datei <code>test/HLint.hs</code> mit folgendem Inhalt:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Main</span> (main) <span class="kw">where</span>
+
+<span class="kw">import           </span><span class="dt">Language.Haskell.HLint</span> (hlint)
+<span class="kw">import           </span><span class="dt">System.Exit</span>            (exitFailure, exitSuccess)
+
+<span class="ot">arguments ::</span> [<span class="dt">String</span>]
+arguments <span class="fu">=</span> [ <span class="st">"benchmark"</span>
+            , <span class="st">"executable"</span>
+            , <span class="st">"library"</span>
+            , <span class="st">"test-suite"</span> ]
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+    hints <span class="ot">&lt;-</span> hlint <span class="fu">$</span> <span class="st">"--utf8"</span> <span class="fu">:</span> arguments
+    <span class="kw">if</span> null hints <span class="kw">then</span> exitSuccess <span class="kw">else</span> exitFailure</code></pre></div>
+<p>In der <code>Blatt01.cabal</code> fügen Sie folgenden Abschnitt hinzu:</p>
+<pre><code>test-suite hlint
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             HLint.hs
+  build-depends:       base
+                     , hlint
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010</code></pre>
+<p>Anschließend können Sie mit <code>stack test</code> auch HLint-Empfehlungen bekommen.</p>
+<!--
+Sie finden den gesamten Code im Repository <https://github.com/ob-cs-hm-edu/fun-Blatt01> und das dazugehörige Jenkins-Projekt unter <https://terraform.cs.hm.edu/jenkins/job/fun-Blatt01/>. Der Jenkins führt übrigens folgende Befehle aus:
+
+    $ cabal sandbox init
+    $ cabal install --only-dependencies --enable-tests
+    $ cabal configure --flags=documentation --enable-tests
+    $ cabal haddock --hyperlink-source
+    $ cabal build
+    $ cabal test --log=test.log
+    $ hpc markup --destdir=dist/hpc dist/hpc/tix/hspec/hspec
+
+und veröffentlicht die API-Doc, die Datei `test.log` und den HPC-Report.
+-->
+<p>Die letzten beiden Aufgaben habe ich, modulo Anpassungen und Übersetzung, von <a href="http://taylor.fausak.me/2014/03/04/haskeleton-a-haskell-project-skeleton/" class="uri">http://taylor.fausak.me/2014/03/04/haskeleton-a-haskell-project-skeleton/</a>.</p>
+
+
+</body></html>
