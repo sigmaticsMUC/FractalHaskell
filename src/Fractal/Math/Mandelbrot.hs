@@ -1,4 +1,4 @@
-module Mandelbrot(
+module Fractal.Math.Mandelbrot(
 
 )where
 {-

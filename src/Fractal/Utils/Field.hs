@@ -1,7 +1,13 @@
-module Field(
+module Fractal.Utils.Field(
 
 )where
 
 
-generateField :: (a, a) -> (a, a) -> [[a]]
-nerateField start end = undefined
+class Increment a where
+  (.+) :: a -> a -> a
+
+generateField :: Increment a => a -> (a, a) -> (a, a) -> [[a]]
+generateField start@(xs, ys) end@(xe, ye) = undefined
+
+generateRow :: Increment a => a -> (a, a) -> (a, a) -> [a]
+generateRow start@(xs, ys) end@(xe, ye) = undefined

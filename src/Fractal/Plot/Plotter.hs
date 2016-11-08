@@ -1,4 +1,4 @@
-module Plotter(
+module Fractal.Plot.Plotter(
 
 )where
 {-
