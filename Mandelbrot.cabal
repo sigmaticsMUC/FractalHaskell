@@ -16,7 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Fractal.Parallel.Evaluator
-  build-depends:       base >= 4.7 && < 5, parallel
+  build-depends:       base >= 4.7 && < 5, parallel, deepseq, repa, mtl
   default-language:    Haskell2010
 
 executable Mandelbrot-exe
@@ -26,6 +26,9 @@ executable Mandelbrot-exe
   build-depends:       base
                      , Mandelbrot
                      , parallel
+                     , deepseq
+                     , repa
+                     , mtl
   default-language:    Haskell2010
 
 test-suite Blatt01-test
@@ -35,6 +38,9 @@ test-suite Blatt01-test
   build-depends:       base
                      , Mandelbrot
                      , parallel
+                     , deepseq
+                     , repa
+                     , mtl
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
@@ -50,5 +56,8 @@ benchmark criterion
                        , Mandelbrot
                        , criterion
                        , parallel
+                       , deepseq
+                       , repa
+                       , mtl
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
