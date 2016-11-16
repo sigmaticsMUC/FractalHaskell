@@ -12,7 +12,7 @@ import Control.DeepSeq
 import qualified Data.Array.Repa as R
 import Control.Monad.Identity
 
-data EvalStrat = Single | Parallel | Repa
+data EvalStrat = Single | Parallel | RepaSingle | RepaParallel
 
 type RepaFractal r = R.Array R.U R.DIM2 r
 
