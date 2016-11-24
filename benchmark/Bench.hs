@@ -16,10 +16,14 @@ square x = x * x
 
 singleEvaluation = P.mandelEval P.Single test_f
 parralelEvaluation = P.mandelEval P.Parallel test_f
+repaSingleEvaluation = P.mandelEval P.RepaSingle test_f
+repaParallelEvaluation = P.mandelEval P.RepaParallel test _f
 
 main :: IO ()
 main = defaultMain
   [ bgroup "Evauluator" [ bench "Single"    $ nf singleEvaluation test_array
                         , bench "Parallel"  $ nf parralelEvaluation test_array
+                        , bench "Single Repa" $ nf repaSingleEvaluation test_array
+                        , bench "Parallel Repa" $ repaParallelEvaluation test_array
                         ]
   ]

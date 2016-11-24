@@ -2,8 +2,9 @@
 
 module Fractal.Parallel.Evaluator(
   mandelEval,
-  EvalStrat (Single, Parallel, Repa),
-  applySingleRepa
+  EvalStrat (Single, Parallel, RepaSingle, RepaParallel),
+  applySingleRepa,
+  stringToStrat
 )where
 
 
@@ -11,8 +12,10 @@ import Control.Parallel.Strategies
 import Control.DeepSeq
 import qualified Data.Array.Repa as R
 import Control.Monad.Identity
+import Data.Char
 
 data EvalStrat = Single | Parallel | RepaSingle | RepaParallel
+  deriving (Show, Eq)
 
 type RepaFractal r = R.Array R.U R.DIM2 r
 
@@ -21,7 +24,8 @@ mandelEval :: (Num a, NFData a) => EvalStrat -> (a -> a) -> [[a]] -> [[a]]
 mandelEval strat f domain = case strat of
   Single -> mandelSingle f domain
   Parallel -> mandelParallel f domain
-  Repa -> mandelRepa f domain
+  RepaSingle -> undefined --R.toList $ applySingleRepa f domain
+  RepaParallel -> undefined --R.toList $ applyParallelRepa f domain
 
 
 {-
@@ -38,8 +42,17 @@ mandelParallel f domain = runEval $ do
   resultDomain <- rseq $ domainParralel f domain
   return resultDomain
 
-mandelRepa :: Num a => (a->a) -> [[a]] -> [[a]]
-mandelRepa f domain = undefined
+applySingleRepa f domain = applySingleRepa' f (convertList domain)
+
+applyParallelRepa f domain = applyParallelRepa' f (convertList domain)
+
+stringToStrat :: String -> EvalStrat
+stringToStrat typeIn = case typeIn' of
+  "PARALLEL"     -> Parallel
+  "REPASINGLE"   -> RepaSingle
+  "REPAPARALLEL" -> RepaParallel
+  _              -> Single
+  where typeIn' = map toUpper typeIn
 
 
 {-
@@ -65,11 +78,6 @@ convertList list@(row:_) = R.fromListUnboxed (R.Z R.:. rows R.:. cols) flated
         cols = length row
         flated = concat list
 
-applySingleRepa f domain = applySingleRepa' f (convertList domain)
-
-applyParallelRepa f domain = applyParallelRepa' f (convertList domain)
-
---applySingleRepa :: Num a => (a->a) -> RepaFractal a -> RepaFractal a
 applySingleRepa' f domain     = R.computeS (R.fromFunction (R.Z R.:.n R.:.n) sp)
   where R.Z R.:._ R.:.n      = R.extent domain
         sp (R.Z R.:.i R.:.j) =  f (domain R.! (R.Z R.:.i R.:.j))

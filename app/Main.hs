@@ -1,13 +1,16 @@
-
-
 module Main where
 
 import qualified Data.Array.Repa as R
 import qualified Fractal.Parallel.Evaluator as P
+import qualified Fractal.Control.Controller as C
+import qualified Fractal.Gui.FractalWindow as W
 import  System.IO (BufferMode (NoBuffering), hSetBuffering, stdout)
+import Data.Complex
+import Data.List
+
 
 main :: IO ()
-main = putStrLn "HI"
+main = W.main
 
 
 test_f :: Int -> Int
