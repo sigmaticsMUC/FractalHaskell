@@ -9,21 +9,31 @@ import Control.Monad.IO.Class
 import Graphics.UI.Gtk.Buttons.Button
 import Graphics.UI.Gtk.Entry.Entry
 import qualified Fractal.Gui.UI_ID as GUI_ID
+import Graphics.UI.Gtk.Display.Image
 
+import Fractal.Parallel.Evaluator (EvalStrat, stringToStrat)
+import Control.Monad
 
 
 
 data MandelUI = MandelUI{
-                  _window          :: Window
-                  --calcButton      :: Button,
-                  --limitEntry      :: Entry,
-                  --stepEntry       :: Entry,
-                  --x_startEntry    :: Entry,
-                  --y_startEntry    :: Entry,
-                  --x_endEntry      :: Entry,
-                  --y_endEntry      :: Entry,
-                  --evalStratEntry  :: Entry
+                  _window          :: Window,
+                  _calcButton      :: Button,
+                  _limitEntry      :: Entry,
+                  _stepEntry       :: Entry,
+                  _x_startEntry    :: Entry,
+                  _y_startEntry    :: Entry,
+                  _x_endEntry      :: Entry,
+                  _y_endEntry      :: Entry,
+                  _evalStratEntry  :: Entry,
+                  _image           :: Image
                 }
+
+type Limit       = Double
+type Step        = Double
+type StartPoint  = (Double, Double)
+type EndPoint    = (Double, Double)
+type MandelInput = (Double, Double, (Double, Double),(Double, Double), EvalStrat)
 
 createUI :: Builder -> IO MandelUI
 createUI builder = do
@@ -37,21 +47,49 @@ createUI builder = do
   x_e     <- builderGetObject builder castToEntry GUI_ID.id_X_END
   y_e     <- builderGetObject builder castToEntry GUI_ID.id_Y_END
   calcT   <- builderGetObject builder castToEntry GUI_ID.id_EVAL_STRAT
-  --return (MandelUI { window=win, calcButton=clcB, limitEntry=lim, stepEntry=step, x_startEntry=x_s, y_startEntry=y_s, x_endEntry=x_e, y_endEntry=y_e, evalStratEntry=calcT})
-  return MandelUI {_window = win}
+  img     <- builderGetObject builder castToImage GUI_ID.id_IMAGE
+  return (MandelUI { _window=win, _calcButton=clcB, _limitEntry=lim
+                   , _stepEntry=step, _x_startEntry=x_s, _y_startEntry=y_s
+                   , _x_endEntry=x_e, _y_endEntry=y_e, _evalStratEntry=calcT, _image=img})
 
-entryAction entry = do
-  res <- entryGetText entry
-  putStrLn res
-  return res
+buttonClick :: MandelUI -> IO ()
+buttonClick ui = do
+  let entrys =  getEntrys ui
+  stringInput <- readEntrys entrys
+  let mandelInput = readMandelInput stringInput
+  putStrLn $ show mandelInput
+  return ()
+
+getEntrys :: MandelUI -> [Entry]
+getEntrys ui = [_limitEntry ui, _stepEntry ui, _x_startEntry ui, _y_startEntry ui
+               , _x_endEntry ui, _y_endEntry ui, _evalStratEntry ui]
+
+
+readMandelInput :: [String] -> MandelInput
+readMandelInput blah@[lim, step, xS, yS, xE, yE, eval] =
+  let lim'  = read lim :: Double
+      step' = read step
+      xS'   = read xS
+      yS'   = read yS
+      xE'   = read xE
+      yE'   = read yE
+      eval' = stringToStrat eval
+  in (lim', step', (xS', yS'), (xE', yE'), eval')
+
+
+readEntrys :: [Entry] -> IO [String]
+readEntrys entrys = do
+  input <- mapM entryGetText entrys
+  return input
 
 
 main = do
     initGUI
-    hello    <- builderNew
-    builderAddFromFile hello "./res/interface3.glade"
-    mandelUI <- createUI hello
-    --(on) window deleteEvent $ liftIO mainQuit >> return False
-    --(on) clcButton buttonActivated $ putStrLn "HI"
+    builder    <- builderNew
+    builderAddFromFile builder GUI_ID.path_INTERFACE
+    mandelUI <- createUI builder
+    imageSetFromFile (_image mandelUI) GUI_ID.path_IMAGE
+    (on) (_window mandelUI)    deleteEvent $ liftIO mainQuit >> return False
+    (on) (_calcButton mandelUI) buttonActivated $ buttonClick mandelUI
     widgetShowAll (_window mandelUI)
     mainGUI
