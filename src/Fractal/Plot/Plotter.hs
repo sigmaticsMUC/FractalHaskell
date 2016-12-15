@@ -1,10 +1,16 @@
 module Fractal.Plot.Plotter(
-
+  imageFractal
 )where
-{-
- Nur ein vorschlag, eigene class braucht es nicht!
--}
-type RGB = (Float, Float, Float)
 
-class Plottable a where
-  plot :: [[a]] -> [[RGB]]
+import Codec.Picture
+
+
+
+imageFractal :: Int -> [Int] -> String -> IO ()
+imageFractal len field path = writePng path $ generateImage pixelRenderer len len
+   where pixelRenderer x y = colorList (field !! (len * y + x))
+
+
+
+colorList :: Int -> PixelRGB8
+colorList count = PixelRGB8 (fromIntegral (count * count * count)) (fromIntegral (count * count * count)) 128

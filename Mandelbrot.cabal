@@ -15,8 +15,8 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Fractal.Parallel.Evaluator
-  build-depends:       base >= 4.7 && < 5, parallel, deepseq, repa, mtl, gtk3, glib
+  exposed-modules:     Fractal.Math.Kernel, Fractal.Math.Mandelbrot, Fractal.Plot.Plotter, Fractal.Parallel.Evaluator, Fractal.Control.Controller, Fractal.Gui.FractalWindow, Fractal.Gui.UI_ID, Fractal.Utils.Field
+  build-depends:       JuicyPixels, base >= 4.7 && < 5, parallel, deepseq, repa, mtl, gtk3, glib
   default-language:    Haskell2010
 
 executable Mandelbrot-exe
@@ -29,6 +29,7 @@ executable Mandelbrot-exe
                      , deepseq
                      , repa
                      , mtl
+                     , JuicyPixels
   default-language:    Haskell2010
 
 test-suite Blatt01-test

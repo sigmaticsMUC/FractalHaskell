@@ -1,29 +1,65 @@
 module Fractal.Control.Controller(
-  consoleApplication,
-  uiApplication
+  ApplicationType (UI_Application, Console_Application),
+  mandelApplication,
+  getApplicationType
 )where
 
 import  System.IO (BufferMode (NoBuffering), hSetBuffering, stdout)
 import qualified Fractal.Parallel.Evaluator as P
+import qualified Fractal.Gui.FractalWindow as W
 import qualified Fractal.Utils.Field as F
+import Fractal.Math.Mandelbrot (mandel, mandel')
+import Data.Complex
+import Fractal.Plot.Plotter (imageFractal)
 
 
+data ApplicationType = UI_Application | Console_Application | None
+type Point = Complex Double
 
-type Point = (Double, Double)
+mandelApplication :: ApplicationType -> IO ()
+mandelApplication appType = case appType of
+  UI_Application        -> uiApplication
+  Console_Application   -> consoleApplication
+  None                  -> error "Blah"
+
+getApplicationType :: [String] -> ApplicationType
+getApplicationType [] = None
+getApplicationType (x:_) = case x of
+  "UI_Application"      -> UI_Application
+  "Console_Application" -> Console_Application
+  _                     -> None
 
 
-consoleApplication :: (a->b) -> IO ()
-consoleApplication f = do
-  (limit, stepsize, startP, endP, evalStrat') <- consoleReadInput
-  let evalStrat = P.stringToStrat evalStrat'
-  let field = F.generateField startP endP
+consoleApplication :: IO ()
+consoleApplication = do
+  input <- consoleReadInput
+  coreComputation input
   return ()
 
-consoleReadInput :: IO (Double, Double, Point, Point, String)
+coreComputation :: (Double, Int, Double, Point, Point, String) -> IO ()
+coreComputation (limit, maxIter, stepSize, sPoint, ePoint, strat) = do
+  let field   = F.generateField sPoint ePoint stepSize
+  let field'  = concat field
+  let res     = P.mandelEval (P.stringToStrat strat) (mandel' maxIter limit) field'
+  let len     = length $ head field
+  imageFractal len res ("./Mandel_" ++ (show len) ++ "_" ++ (show len))
+  return ()
+
+
+uiApplication :: IO ()
+uiApplication = W.mainW coreComputation
+
+{-
+  Helper functions
+-}
+consoleReadInput :: IO (Double, Int, Double, Point, Point, String)
 consoleReadInput = do
   putStr "Type in recursive limit: "
   fractalLimit <- getLine
   let limit = (read fractalLimit) :: Double
+  putStr "Type in max number of iterations: "
+  maxIter <- getLine
+  let maxIt = (read maxIter) :: Int
   putStr "Type in stepsize: "
   stepSize <- getLine
   let step = (read stepSize) :: Double
@@ -35,9 +71,4 @@ consoleReadInput = do
   let endP = (read endPoint) :: Point
   putStr "Type in evaluation strategie: "
   evalStrat <- getLine
-  return (limit, step, startP, endP, evalStrat)
-
-
-
-uiApplication :: IO ()
-uiApplication = undefined
+  return (limit, maxIt, step, startP, endP, evalStrat)

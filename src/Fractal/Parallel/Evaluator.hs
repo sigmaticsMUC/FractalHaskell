@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 
 module Fractal.Parallel.Evaluator(
   mandelEval,
   EvalStrat (Single, Parallel, RepaSingle, RepaParallel),
-  applySingleRepa,
-  stringToStrat
+  stringToStrat,
 )where
 
 
@@ -17,15 +17,14 @@ import Data.Char
 data EvalStrat = Single | Parallel | RepaSingle | RepaParallel
   deriving (Show, Eq)
 
-type RepaFractal r = R.Array R.U R.DIM2 r
+type RepaFractal r = R.Array R.U R.DIM1 r
 
 
-mandelEval :: (Num a, NFData a) => EvalStrat -> (a -> a) -> [[a]] -> [[a]]
 mandelEval strat f domain = case strat of
   Single -> mandelSingle f domain
   Parallel -> mandelParallel f domain
-  RepaSingle -> undefined --R.toList $ applySingleRepa f domain
-  RepaParallel -> undefined --R.toList $ applyParallelRepa f domain
+  RepaSingle -> R.toList (applySingleRepa f domain :: R.Array R.U R.DIM1 Int)
+  RepaParallel -> R.toList (applyParallelRepa f domain :: R.Array R.U R.DIM1 Int)
 
 
 {-
@@ -34,13 +33,9 @@ mandelEval strat f domain = case strat of
 
 -}
 
-mandelSingle :: Num a => (a->a) -> [[a]] -> [[a]]
-mandelSingle f domain = map (\row -> map f row) domain
+mandelSingle f domain = map force (map f domain)
 
-mandelParallel :: (Num a, NFData a) => (a->a) -> [[a]] -> [[a]]
-mandelParallel f domain = runEval $ do
-  resultDomain <- rseq $ domainParralel f domain
-  return resultDomain
+mandelParallel f domain = domainParralel f domain
 
 applySingleRepa f domain = applySingleRepa' f (convertList domain)
 
@@ -61,30 +56,23 @@ Low Level Helping Functions
 
 -}
 
--- Apply function to 2D Array.
-domainParralel :: (Num a, NFData a) => (a->a) -> [[a]] -> [[a]]
-domainParralel _ [] = []
-domainParralel f (row:rows) = (rowParralel f row) : (domainParralel f rows)
+domainParralel :: (Num b, Num a, NFData b, NFData a) => (a->b) -> [a] -> [b]
+domainParralel f domain = parallelComputedList
+  where mapped = map f domain
+        parallelComputedList = mapped `using` parList rdeepseq
 
--- Apply function to List within rpar.
-rowParralel :: (Num a, NFData a) => (a->a) -> [a] -> [a]
-rowParralel f row = runEval $ do
-  rowResult <- (rpar `dot` rdeepseq) $ map f row
-  return rowResult
 
---convertList :: Num a => [[a]] -> R.Array R.U R.DIM2 a
-convertList list@(row:_) = R.fromListUnboxed (R.Z R.:. rows R.:. cols) flated
+convertList list = R.fromListUnboxed (R.Z R.:. rows) list
   where rows = length list
-        cols = length row
-        flated = concat list
 
-applySingleRepa' f domain     = R.computeS (R.fromFunction (R.Z R.:.n R.:.n) sp)
-  where R.Z R.:._ R.:.n      = R.extent domain
-        sp (R.Z R.:.i R.:.j) =  f (domain R.! (R.Z R.:.i R.:.j))
+
+applySingleRepa' f domain     = R.computeS (R.fromFunction (R.Z R.:.n) sp)
+  where R.Z R.:. n      = R.extent domain
+        sp (R.Z R.:.i ) =  f (domain R.! (R.Z R.:.i))
 
 applyParallelRepa' f domain     = runIdentity $  res
-  where R.Z R.:._ R.:.n      = R.extent domain
-        sp (R.Z R.:.i R.:.j) =  f (domain R.! (R.Z R.:.i R.:.j))
+  where R.Z R.:.n     = R.extent domain
+        sp (R.Z R.:.i ) =  f (domain R.! (R.Z R.:.i))
         res = do
-          res' <- R.computeP (R.fromFunction (R.Z R.:.n R.:.n) sp)
+          res' <- R.computeP (R.fromFunction (R.Z R.:.n) sp)
           return res'

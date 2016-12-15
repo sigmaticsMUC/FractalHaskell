@@ -222,11 +222,16 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="evalStrat">
+              <object class="GtkComboBoxText" id="evalStrat">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
+                <property name="can_focus">False</property>
+                <property name="active_id">single</property>
+                <items>
+                  <item id="single" translatable="yes">Single</item>
+                  <item id="parallel" translatable="yes">Parallel</item>
+                  <item id="repa_single" translatable="yes">RepaSingle</item>
+                  <item id="repa_parallel" translatable="yes">RepaParallel</item>
+                </items>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -257,15 +262,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="image1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stock">gtk-missing-image</property>
-          </object>
-          <packing>
-            <property name="resize">True</property>
-            <property name="shrink">True</property>
-          </packing>
+          <placeholder/>
         </child>
       </object>
     </child>

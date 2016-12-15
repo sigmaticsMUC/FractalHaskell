@@ -1,21 +1,25 @@
 module Fractal.Utils.Field(
-  generateField
+  generateField,
+  generateRow
 )where
+
 import Data.Complex
-type FieldPoint = (Double, Double)
-type ComplexPoint = (Complex Double, Complex Double)
-type Field = [[Complex Double]]
 
-{-
-class Increment a where
-  (.+) :: a -> a -> a
+type Value = Complex Double
+type Point = Value
+type Row = [Point]
+type Field = [Row]
+type Step = Double
 
-generateField :: Increment a => a -> (a, a) -> (a, a) -> [[a]]
-generateField start@(xs, ys) end@(xe, ye) = undefined
 
-generateRow :: Increment a => a -> (a, a) -> (a, a) -> [a]
-generateRow start@(xs, ys) end@(xe, ye) = undefined
--}
+generateField :: Point -> Point -> Step -> Field
+generateField start end step
+  | (imagPart start) <= (imagPart end)     = (generateRow start end step):[]
+  | otherwise                              = (generateRow start end step) : (generateField newStart end step)
+      where newStart = (realPart start) :+ ((imagPart start) - step)
 
-generateField :: FieldPoint -> FieldPoint -> Field
-generateField start end = undefined
+generateRow :: Point -> Point -> Step -> Row
+generateRow start end step
+  | (realPart start) >= (realPart end)  = [start]
+  | otherwise                           = start : (generateRow newStart end step)
+      where newStart = ((realPart start) + step) :+ (imagPart start)

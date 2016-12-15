@@ -1,5 +1,5 @@
 module Fractal.Gui.FractalWindow(
-  main
+  mainW
 )where
 
 import Graphics.UI.Gtk
@@ -10,9 +10,9 @@ import Graphics.UI.Gtk.Buttons.Button
 import Graphics.UI.Gtk.Entry.Entry
 import qualified Fractal.Gui.UI_ID as GUI_ID
 import Graphics.UI.Gtk.Display.Image
-
-import Fractal.Parallel.Evaluator (EvalStrat, stringToStrat)
+import Graphics.UI.Gtk.MenuComboToolbar.ComboBox
 import Control.Monad
+import Data.Complex
 
 
 
@@ -25,15 +25,12 @@ data MandelUI = MandelUI{
                   _y_startEntry    :: Entry,
                   _x_endEntry      :: Entry,
                   _y_endEntry      :: Entry,
-                  _evalStratEntry  :: Entry,
-                  _image           :: Image
+                  _evalStratEntry  :: ComboBox
+                  --_image           :: Image
                 }
 
-type Limit       = Double
-type Step        = Double
-type StartPoint  = (Double, Double)
-type EndPoint    = (Double, Double)
-type MandelInput = (Double, Double, (Double, Double),(Double, Double), EvalStrat)
+
+type MandelInput = (Double, Double, Complex Double, Complex Double, String)
 
 createUI :: Builder -> IO MandelUI
 createUI builder = do
@@ -46,11 +43,11 @@ createUI builder = do
   y_s     <- builderGetObject builder castToEntry GUI_ID.id_Y_END
   x_e     <- builderGetObject builder castToEntry GUI_ID.id_X_END
   y_e     <- builderGetObject builder castToEntry GUI_ID.id_Y_END
-  calcT   <- builderGetObject builder castToEntry GUI_ID.id_EVAL_STRAT
-  img     <- builderGetObject builder castToImage GUI_ID.id_IMAGE
+  calcT   <- builderGetObject builder castToComboBox GUI_ID.id_EVAL_STRAT
+  --img     <- builderGetObject builder castToImage GUI_ID.id_IMAGE
   return (MandelUI { _window=win, _calcButton=clcB, _limitEntry=lim
                    , _stepEntry=step, _x_startEntry=x_s, _y_startEntry=y_s
-                   , _x_endEntry=x_e, _y_endEntry=y_e, _evalStratEntry=calcT, _image=img})
+                   , _x_endEntry=x_e, _y_endEntry=y_e, _evalStratEntry=calcT{-, _image=img-}})
 
 buttonClick :: MandelUI -> IO ()
 buttonClick ui = do
@@ -62,19 +59,18 @@ buttonClick ui = do
 
 getEntrys :: MandelUI -> [Entry]
 getEntrys ui = [_limitEntry ui, _stepEntry ui, _x_startEntry ui, _y_startEntry ui
-               , _x_endEntry ui, _y_endEntry ui, _evalStratEntry ui]
+               , _x_endEntry ui, _y_endEntry ui]
 
 
 readMandelInput :: [String] -> MandelInput
 readMandelInput blah@[lim, step, xS, yS, xE, yE, eval] =
-  let lim'  = read lim :: Double
-      step' = read step
-      xS'   = read xS
-      yS'   = read yS
-      xE'   = read xE
-      yE'   = read yE
-      eval' = stringToStrat eval
-  in (lim', step', (xS', yS'), (xE', yE'), eval')
+  let lim'  = (read lim) :: Double
+      step' = (read step) :: Double
+      xS'   = (read xS) :: Double
+      yS'   = (read yS) :: Double
+      xE'   = (read xE) :: Double
+      yE'   = (read yE) :: Double
+  in (lim', step', xS' :+ yS', xE':+ yE', eval)
 
 
 readEntrys :: [Entry] -> IO [String]
@@ -82,13 +78,13 @@ readEntrys entrys = do
   input <- mapM entryGetText entrys
   return input
 
-
-main = do
+mainW :: ((Double, Int, Double, Complex Double, Complex Double, String) -> IO ()) -> IO ()
+mainW computation = do
     initGUI
     builder    <- builderNew
     builderAddFromFile builder GUI_ID.path_INTERFACE
     mandelUI <- createUI builder
-    imageSetFromFile (_image mandelUI) GUI_ID.path_IMAGE
+    --imageSetFromFile (_image mandelUI) GUI_ID.path_IMAGE
     (on) (_window mandelUI)    deleteEvent $ liftIO mainQuit >> return False
     (on) (_calcButton mandelUI) buttonActivated $ buttonClick mandelUI
     widgetShowAll (_window mandelUI)
