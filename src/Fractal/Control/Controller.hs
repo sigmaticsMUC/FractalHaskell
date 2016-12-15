@@ -11,6 +11,7 @@ import qualified Fractal.Utils.Field as F
 import Fractal.Math.Mandelbrot (mandel, mandel')
 import Data.Complex
 import Fractal.Plot.Plotter (imageFractal)
+import Data.DateTime
 
 
 data ApplicationType = UI_Application | Console_Application | None
@@ -42,7 +43,9 @@ coreComputation (limit, maxIter, stepSize, sPoint, ePoint, strat) = do
   let field'  = concat field
   let res     = P.mandelEval (P.stringToStrat strat) (mandel' maxIter limit) field'
   let len     = length $ head field
-  imageFractal len res ("./Mandel_" ++ (show len) ++ "_" ++ (show len))
+  dateTime    <- getCurrentTime
+  let (year, month, day) = toGregorian' dateTime
+  imageFractal len res ("./Mandel_" ++ (show year) ++ "_" ++ (show month) ++ "_" ++ (show day) ++ "_" ++ (show $ toSeconds dateTime))
   return ()
 
 
