@@ -14,25 +14,37 @@ import Fractal.Plot.Plotter (imageFractal)
 import Data.DateTime
 
 
-data ApplicationType = UI_Application | Console_Application | None
+data ApplicationType = UI_Application | Console_Application | None | Empty
+  deriving (Show, Eq)
+
 type Point = Complex Double
 
 mandelApplication :: ApplicationType -> IO ()
 mandelApplication appType = case appType of
   UI_Application        -> uiApplication
   Console_Application   -> consoleApplication
-  None                  -> error "Blah"
+  Empty                 -> readApplicationTypeFromInput
+  None                  -> error "Cant use"
 
 getApplicationType :: [String] -> ApplicationType
-getApplicationType [] = None
+getApplicationType [] = Empty
 getApplicationType (x:_) = case x of
   "UI_Application"      -> UI_Application
   "Console_Application" -> Console_Application
-  _                     -> None
+  _                     -> Empty
 
+
+readApplicationTypeFromInput :: IO ()
+readApplicationTypeFromInput = do
+  hSetBuffering stdout NoBuffering
+  putStr "Provide application type (UI_Application or Console_Application): "
+  applicationType <- getLine
+  let appType = getApplicationType [applicationType]
+  if appType == Empty then mandelApplication None else mandelApplication appType
 
 consoleApplication :: IO ()
 consoleApplication = do
+  putStrLn "Running in console mode..."
   input <- consoleReadInput
   coreComputation input
   return ()
@@ -46,17 +58,20 @@ coreComputation (limit, maxIter, stepSize, sPoint, ePoint, strat) = do
   dateTime    <- getCurrentTime
   let (year, month, day) = toGregorian' dateTime
   imageFractal len res ("./Mandel_" ++ (show year) ++ "_" ++ (show month) ++ "_" ++ (show day) ++ "_" ++ (show $ toSeconds dateTime))
+  putStrLn "Image created!"
   return ()
 
 
 uiApplication :: IO ()
-uiApplication = W.mainW coreComputation
+uiApplication = do
+  putStrLn "Running in ui mode"
+  W.mainW coreComputation
+  return ()
 
-{-
-  Helper functions
--}
+
 consoleReadInput :: IO (Double, Int, Double, Point, Point, String)
 consoleReadInput = do
+  hSetBuffering stdout NoBuffering
   putStr "Type in recursive limit: "
   fractalLimit <- getLine
   let limit = (read fractalLimit) :: Double

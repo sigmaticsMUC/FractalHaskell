@@ -8,7 +8,8 @@ module Fractal.Gui.UI_ID(
   id_STEP_SIZE,
   id_CALC_BUTTON,
   id_EVAL_STRAT,
-  id_IMAGE,
+  id_MAX_ITER,
+  id_SPINNER,
   path_INTERFACE,
   path_IMAGE
 )where
@@ -22,6 +23,7 @@ id_LIMIT       = "limit"
 id_STEP_SIZE   = "stepsize"
 id_EVAL_STRAT  = "evalStrat"
 id_CALC_BUTTON = "calculate"
-id_IMAGE       = "image1"
+id_MAX_ITER    = "maxIter_value"
+id_SPINNER     = "spinner"
 path_INTERFACE = "./res/interface3.glade"
 path_IMAGE     = "./res/mandel2.png"
