@@ -62,7 +62,6 @@ buttonClick f ui = do
   let mandelInput = readMandelInput evalStrat stringInput
   putStrLn $ show mandelInput
   spinnerStart (_spinner ui)
-  handle <- newEmptyMVar
   forkFinally (f mandelInput) (\_ -> spinnerStop (_spinner ui))
   return ()
 
@@ -86,10 +85,11 @@ readMandelInput eval blah@[lim, iter, step, xS, yS, xE, yE] =
 readEvaluationMode :: ComboBox -> IO String
 readEvaluationMode box = do
   active <- comboBoxGetActive box
+  putStrLn $ show active
   let a = case active of
             1 -> "Parallel"
-            2 -> "Single"
-            3 -> "RepaSingle"
+            0 -> "Single"
+            2 -> "RepaSingle"
             _ -> "RepaParallel"
   return a
 

@@ -51,10 +51,11 @@ consoleApplication = do
 
 coreComputation :: (Double, Int, Double, Point, Point, String) -> IO ()
 coreComputation (limit, maxIter, stepSize, sPoint, ePoint, strat) = do
-  let field   = F.generateField sPoint ePoint stepSize
-  let field'  = concat field
+  --let field   = F.generateField sPoint ePoint stepSize
+  --let field'  = concat field
+  let field'  = F.generateRowField sPoint ePoint stepSize
   let res     = P.mandelEval (P.stringToStrat strat) (mandel' maxIter limit) field'
-  let len     = length $ head field
+  let len     = F.getFieldLength sPoint ePoint stepSize
   dateTime    <- getCurrentTime
   let (year, month, day) = toGregorian' dateTime
   imageFractal len res ("./Mandel_" ++ (show year) ++ "_" ++ (show month) ++ "_" ++ (show day) ++ "_" ++ (show $ toSeconds dateTime))

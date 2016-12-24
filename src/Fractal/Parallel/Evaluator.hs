@@ -14,17 +14,18 @@ import qualified Data.Array.Repa as R
 import Control.Monad.Identity
 import Data.Char
 
-data EvalStrat = Single | Parallel | RepaSingle | RepaParallel
+data EvalStrat = Single | Parallel | RepaSingle | RepaParallel | Worker
   deriving (Show, Eq)
 
 type RepaFractal r = R.Array R.U R.DIM1 r
 
 
 mandelEval strat f domain = case strat of
-  Single -> mandelSingle f domain
-  Parallel -> mandelParallel f domain
-  RepaSingle -> R.toList (applySingleRepa f domain :: R.Array R.U R.DIM1 Int)
+  Single       -> mandelSingle f domain
+  Parallel     -> mandelParallel f domain
+  RepaSingle   -> R.toList (applySingleRepa f domain :: R.Array R.U R.DIM1 Int)
   RepaParallel -> R.toList (applyParallelRepa f domain :: R.Array R.U R.DIM1 Int)
+  Worker       -> undefined
 
 
 {-
@@ -37,9 +38,13 @@ mandelSingle f domain = map force (map f domain)
 
 mandelParallel f domain = domainParralel f domain
 
+mandelWorker f domain = undefined
+
 applySingleRepa f domain = applySingleRepa' f (convertList domain)
 
 applyParallelRepa f domain = applyParallelRepa' f (convertList domain)
+
+
 
 stringToStrat :: String -> EvalStrat
 stringToStrat typeIn = case typeIn' of
